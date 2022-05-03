@@ -1,0 +1,7 @@
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(excessmort)
+data("cook_records")
+kable(cook_records[1:6,])
