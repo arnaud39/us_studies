@@ -6,6 +6,7 @@ from typing import List
 import pandas as pd
 import os
 
+
 def auto_wonder_pipeline(
     dir_: str = "data/CDC",
     columns: List[str] = ["State", "Month Code", "UCD - ICD Chapter", "Deaths"],
@@ -14,9 +15,24 @@ def auto_wonder_pipeline(
         "Diseases of the respiratory system",
     ],
     short_outcome: List[str] = ["circulatory system", "respiratory system"],
+    identifer: str = "all",
 ) -> pd.DataFrame:
+    """Load the CDC xonder data
+
+    Args:
+        dir_ (str, optional): _description_. Defaults to "data/CDC".
+        columns (List[str], optional): _description_. Defaults to ["State", "Month Code", "UCD - ICD Chapter", "Deaths"].
+        observed_outcome (List[str], optional): _description_. Defaults to [ "Diseases of the circulatory system", "Diseases of the respiratory system", ].
+        short_outcome (List[str], optional): Used to name the column  in the dataframe. Defaults to ["circulatory system", "respiratory system"].
+        identifer (str, optional): _description_. Defaults to "all".
+
+    Returns:
+        pd.DataFrame: _description_
+    """
     files_ = [
-        f"{dir_}/{data_file}" for data_file in os.listdir(dir_) if "txt" in data_file
+        f"{dir_}/{data_file}"
+        for data_file in os.listdir(dir_)
+        if "txt" in data_file and identifer in data_file
     ]
 
     df_outcomes_ = pd.concat(
@@ -36,6 +52,7 @@ def auto_wonder_pipeline(
         columns={
             "State": "state",
             "UCD - ICD Chapter": "cause",
+            "ICD Chapter": "cause",
             "Deaths": "deaths",
             "Month Code": "time",
         },
@@ -58,4 +75,7 @@ def auto_wonder_pipeline(
         ],
         axis=1,
     )
+
+    df_observed = df_observed.assign(totaldeaths=lambda x: x.cirdeaths + x.resdeaths)
+
     return df_observed.loc[:, ~df_observed.columns.duplicated()]
