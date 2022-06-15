@@ -1,3 +1,7 @@
+#confidential files
+dat/confidential_death_certificates/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
