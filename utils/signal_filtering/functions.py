@@ -6,9 +6,9 @@ import pandas as pd
 
 filter_joint = lambda df, column_, method, type="int", **kwargs: pd.concat(
     [
-        method(df.loc[slice(None, 0)][column_], **kwargs)[1]
+        method(df.loc[slice(None, -1)][column_], **kwargs)[1]
         if type == "int"
-        else method(df.loc[slice(None, 0)][column_], **kwargs).trend,
+        else method(df.loc[slice(None, -1)][column_], **kwargs).trend,
         method(df.loc[slice(0, None)][column_], **kwargs)[1]
         if type == "int"
         else method(df.loc[slice(0, None)][column_], **kwargs).trend,
